@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Para Julieta 🤍</title>
+    <style>
+        /* =========================================
+           VARIABLES Y TIPOGRAFÍAS
+           ========================================= */
+        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Montserrat:wght@300;400&display=swap');
+
+        :root {
+            --bg-color: #FAF8F5;
+            --text-color: #4A4441;
+            --accent-color: #D4A373;
+            --white: #FFFFFF;
+            --black: #050505;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body, html {
+            font-family: 'Cormorant Garamond', serif;
+            background-color: var(--black);
+            color: var(--text-color);
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        p { font-family: 'Montserrat', sans-serif; font-size: 0.95rem; line-height: 1.8; font-weight: 300; }
+        h1, h2, h3 { font-weight: 400; letter-spacing: 1px; }
+
+        /* Efecto VHS / Ruido sutil */
+        .grain {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            pointer-events: none; z-index: 9999; opacity: 0.03;
+            background-image: url('https://upload.wikimedia.org/wikipedia/commons/7/76/1k_Dissolve_Noise_Texture.png');
+        }
+
+        /* =========================================
+           INTRO CINEMÁTICA - CORREGIDA
+           ========================================= */
+        #intro-screen {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background-color: var(--black); color: var(--white);
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            text-align: center; z-index: 1000; transition: opacity 1.5s ease;
+        }
+
+        .intro-text {
+            font-size: 1.5rem; opacity: 0; position: absolute;
+            transition: opacity 1.5s ease; padding: 0 20px;
+        }
+
+        #enter-btn {
+            opacity: 0; background: transparent;
+            border: 1px solid rgba(255,255,255,0.5); color: var(--white);
+            padding: 12px 30px; font-family: 'Montserrat', sans-serif;
+            font-size: 0.85rem; letter-spacing: 2px; cursor: pointer;
+            border-radius: 30px; transition: all 1s ease;
+            pointer-events: none; position: relative; z-index: 99999;
+            display: none; /* Oculto inicialmente por CSS */
+        }
+        #enter-btn:hover { background: var(--white); color: var(--black); }
+
+        /* =========================================
+           CONTENIDO PRINCIPAL
+           ========================================= */
+        #main-content {
+            display: none; background-color: var(--bg-color); width: 100%;
+            min-height: 100vh; opacity: 0; transition: opacity 2s ease;
+            position: relative;
+        }
+
+        /* Botón de Música */
+        #music-control {
+            position: fixed; top: 20px; right: 20px; z-index: 100;
+            background: rgba(255,255,255,0.7); border: none; border-radius: 50%;
+            width: 40px; height: 40px; cursor: pointer; backdrop-filter: blur(5px);
+            display: flex; justify-content: center; align-items: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05); font-size: 1rem;
+        }
+
+        /* Header / Hilo Conductor */
+        .hero {
+            height: 80vh; display: flex; justify-content: center; align-items: center;
+            text-align: center; padding: 0 20px;
+        }
+        .hero h1 { font-size: 2.2rem; max-width: 800px; color: var(--text-color); line-height: 1.4; }
+
+        /* Capítulos / Memorias */
+        .chapter {
+            padding: 100px 20px; max-width: 900px; margin: 0 auto;
+            display: flex; flex-direction: column; align-items: center; gap: 40px;
+        }
+        @media(min-width: 768px) {
+            .chapter { flex-direction: row; justify-content: space-between; }
+            .chapter:nth-child(even) { flex-direction: row-reverse; }
+            .chapter .photo-container { width: 45%; }
+            .chapter .text-container { width: 50%; }
+        }
+
+        /* Estilo de fotos */
+        .photo-container {
+            position: relative; width: 100%; max-width: 400px;
+            padding: 15px 15px 50px 15px; background: #fff;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08); transform: rotate(-2deg);
+            transition: transform 0.6s ease;
+        }
+        .chapter:nth-child(even) .photo-container { transform: rotate(2deg); }
+        .photo-container:hover { transform: rotate(0) scale(1.02); }
+        
+        .photo-container img {
+            width: 100%; height: auto; display: block; object-fit: cover;
+            filter: sepia(10%) contrast(95%);
+        }
+
+        .text-container { text-align: left; }
+        .text-container h2 { font-size: 1.8rem; margin-bottom: 15px; color: var(--text-color); }
+        .quote-cinematic { 
+            font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; font-style: italic; 
+            margin-top: 20px; color: var(--accent-color); border-left: 2px solid var(--accent-color);
+            padding-left: 15px;
+        }
+
+        /* =========================================
+           SECCIÓN DE HERIDAS
+           ========================================= */
+        .wounds {
+            background-color: #EAE6E1; padding: 150px 20px; text-align: center;
+            color: #333; margin-top: 50px;
+        }
+        .wounds-container { max-width: 700px; margin: 0 auto; }
+        .wounds p { font-size: 1.1rem; margin-bottom: 30px; }
+        .wounds-highlight { font-family: 'Cormorant Garamond', serif; font-size: 2rem; color: #222; margin: 40px 0; line-height: 1.3;}
+
+        /* =========================================
+           FINAL
+           ========================================= */
+        .finale {
+            background-color: var(--white); min-height: 100vh; padding: 100px 20px;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            text-align: center;
+        }
+        .final-photo {
+            width: 100%; max-width: 500px; box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+            margin-bottom: 50px;
+        }
+        .finale h1 { font-size: 2.8rem; margin-bottom: 20px; color: var(--text-color); }
+        .finale p { font-size: 1.2rem; max-width: 600px; margin: 0 auto 50px auto; }
+        
+        .btn-final {
+            background: transparent; border: 1px solid var(--text-color); color: var(--text-color);
+            padding: 15px 40px; font-family: 'Montserrat', sans-serif; font-size: 1rem;
+            letter-spacing: 1px; cursor: pointer; border-radius: 30px; transition: all 0.5s ease;
+            text-decoration: none; display: inline-block; text-align: center;
+        }
+        .btn-final:hover { background: var(--text-color); color: var(--white); }
+
+        /* =========================================
+           ANIMACIONES DE SCROLL (Reveal)
+           ========================================= */
+        .reveal { opacity: 0; transform: translateY(40px); transition: all 1.2s cubic-bezier(0.5, 0, 0, 1); }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+
+        /* Partículas */
+        .particle {
+            position: absolute; background: rgba(212, 163, 115, 0.3); border-radius: 50%;
+            pointer-events: none; animation: floatUp linear infinite;
+        }
+        @keyframes floatUp {
+            0% { transform: translateY(100vh) scale(0); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: translateY(-10vh) scale(1); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="grain"></div>
+
+    <audio id="bg-audio" loop>
+        <source src="./music/sueno.mp3" type="audio/mpeg">
+    </audio>
+
+    <div id="intro-screen">
+        <p class="intro-text" id="t1">Hay personas que llegan a tu vida...</p>
+        <p class="intro-text" id="t2">y sin darte cuenta empiezas a construir recuerdos con ellas.</p>
+        <p class="intro-text" id="t3">Y tú, Julieta...<br>te convertiste en mi lugar favorito.</p>
+        <button id="enter-btn" onclick="startExperience()">entra aquí, amor 🤍</button>
+    </div>
+
+    <div id="main-content">
+        <button id="music-control" onclick="toggleMusic()">🎵</button>
+        <div id="particles-container"></div>
+
+        <section class="hero reveal">
+            <h1>"Yo ya te estaba amando bonito incluso antes de darme cuenta cuánto ibas a significar para mí."</h1>
+        </section>
+
+        <section class="chapter reveal">
+            <div class="photo-container">
+                <img src="./images/mi primer intento de manualidad.jpeg" alt="Mi primera manualidad">
+            </div>
+            <div class="text-container">
+                <h2>Mi primera manualidad</h2>
+                <p>Fue un 11 de marzo. Duré desde el 9 de marzo haciéndola porque quería hacerle algo lindo que le gustara. No quedó del todo bien, pero lo hice con muchísimo amor. Se la envié con dos peluchitos y nuestro hijo Mario. Sentía nervios, pero sobre todo, unas ganas inmensas de hacerte sonreír.</p>
+                <p class="quote-cinematic">“Tal vez no todo me salía perfecto... pero desde el principio todo lo hacía con amor para ti.”</p>
+            </div>
+        </section>
+
+        <section class="chapter reveal">
+            <div class="photo-container">
+                <img src="./images/el primer sueño tuyo cumplido que despues me cumpliria mi sueño.jpg" alt="El primer sueño cumplido">
+            </div>
+            <div class="text-container">
+                <h2>El primer sueño cumplido</h2>
+                <p>Me contaste que uno de tus sueños era tener una flor eterna. Yo ya estaba seguro de que eras el amor de mi vida, así que quise ser yo quien te la regalara. Después, tú me cumpliste el sueño de ser mi novia y me hiciste demasiado feliz. Aquí empecé a imaginar un futuro contigo.</p>
+            </div>
+        </section>
+
+        <section class="chapter reveal">
+            <div class="photo-container">
+                <img src="./images/la broma del cambio de pelo.png" alt="La broma del pelo">
+            </div>
+            <div class="text-container">
+                <h2>La broma del cambio de color de pelo</h2>
+                <p>Nos estábamos cambiando el color del pelo y terminé poniéndote como una pitufa. Fue un desastre hermoso. Risas, espontaneidad, y la certeza de que incluso en medio de lo absurdo, me encantaba compartir mi juventud contigo.</p>
+            </div>
+        </section>
+
+        <section class="chapter reveal">
+            <div class="photo-container">
+                <img src="./images/la primera carta.jpeg" alt="La primera carta">
+            </div>
+            <div class="text-container">
+                <h2>La primera carta</h2>
+                <p>Fue la primera carta que alguien me daba. Fue hermosísimo porque confesaste todos tus sentimientos primero. A mí me daba pena, pero tú diste ese pequeño y valiente paso. Ese día fue mi primer 14 de febrero y fue con el amor de mi vida.</p>
+                <p class="quote-cinematic">“Ese día entendí que alguien podía quererme tan bonito.”</p>
+            </div>
+        </section>
+
+        <section class="chapter reveal">
+            <div class="photo-container">
+                <img src="./images/rosas de la nada por linda.jpeg" alt="Rosas de la nada">
+            </div>
+            <div class="text-container">
+                <h2>Rosas de la nada por linda</h2>
+                <p>No hay mucho que decir. Solo quería verte feliz, porque ante mis ojos siempre has sido la niña más hermosa del mundo. Quería amarte desde los detalles más pequeños y repentinos.</p>
+            </div>
+        </section>
+
+        <section class="chapter reveal">
+            <div class="photo-container">
+                <img src="./images/los primeros lirios.jpeg" alt="Los primeros lirios">
+            </div>
+            <div class="text-container">
+                <h2>Los primeros lirios</h2>
+                <p>Yo no sabía que eran tus flores favoritas. Me lo contaste y busqué por todos lados hasta conseguirlos, aunque solo encontré blancos. Quería aprender de ti, de lo que te gusta, y esforzarme por dartelo.</p>
+            </div>
+        </section>
+
+        <section class="chapter reveal">
+            <div class="photo-container">
+                <img src="./images/la promesa de ser el ultimo de tus amores.jpg" alt="El último de tus amores">
+            </div>
+            <div class="text-container">
+                <h2>La promesa</h2>
+                <p>Un sábado después de salir pensé: "ella tiene que ser mi primera y última pareja". Entonces te envié 25 rosas, como dice la canción de Joan Sebastian: para ser el último de todos tus amores. Ahí supe que ya estaba irremediablemente enamorado.</p>
+                <p class="quote-cinematic">“Mientras más te conocía... más imposible me parecía imaginar mi vida sin ti.”</p>
+            </div>
+        </section>
+
+        <section class="chapter reveal">
+            <div class="photo-container">
+                <img src="./images/las primeras flores.jpg" alt="Las primeras flores">
+            </div>
+            <div class="text-container">
+                <h2>Las primeras flores</h2>
+                <p>Fueron las flores que mostraban mis intenciones de amarte siempre. Pensé dártelas desde la primera salida pero me daba miedo verme muy intenso. Aun así terminé haciéndolo, porque desde el inicio solo quería hacerte feliz.</p>
+            </div>
+        </section>
+
+        <section class="chapter reveal">
+            <div class="photo-container">
+                <img src="./images/ojooooooos.jpg" alt="Ojitos">
+            </div>
+            <div class="text-container">
+                <h2>Ojitos</h2>
+                <p>Compartí algo y me hiciste un trend de TikTok con nuestros ojos. Para mí tenías (y tienes) los ojos más hermosos del mundo, como lunitas. Yo lo subí a Instagram y a ti te dio pena. Una época tierna, inocente y completamente nuestra.</p>
+            </div>
+        </section>
+
+        <section class="chapter reveal">
+            <div class="photo-container">
+                <img src="./images/mi nerd churra.jpeg" alt="Mi nerd churra">
+            </div>
+            <div class="text-container">
+                <h2>Mi nerd churra</h2>
+                <p>Fue el día de las flores amarillas. Aún no éramos novios, pero yo no quería que mi casi algo fuera solo espectadora. Ya te incluía en todos mis momentos importantes.</p>
+            </div>
+        </section>
+
+        <section class="chapter reveal">
+            <div class="photo-container">
+                <img src="./images/el powerpoint que nunca me canso de leer.jpeg" alt="El PowerPoint">
+            </div>
+            <div class="text-container">
+                <h2>El PowerPoint que nunca me canso de leer</h2>
+                <p>Me lo mandaste de la nada y se sintió demasiado bonito, tierno y sincero. Odio leer, pero esas diapositivas podría leerlas mil veces. Ahí fue cuando realmente dimensioné cuánto me amabas tú también.</p>
+            </div>
+        </section>
+
+        <section class="chapter reveal">
+            <div class="photo-container">
+                <img src="./images/midiendome el anillo.jpg" alt="Midiéndome el anillo">
+            </div>
+            <div class="text-container">
+                <h2>Midiéndome el anillo</h2>
+                <p>Esta es de las más chistosas. Me medí el anillo solo para mostrarle, emocionado y lleno de nervios, a mis amigos lo que había comprado para pedirte que fueras mi novia. La emoción no me cabía en el pecho.</p>
+            </div>
+        </section>
+
+        <section class="chapter reveal">
+            <div class="photo-container">
+                <img src="./images/La carta quemada.jpg" alt="La carta quemada">
+            </div>
+            <div class="text-container">
+                <h2>La carta quemada</h2>
+                <p>Intenté hacer una carta vintage y terminé quemando como tres hojas. Todo olía muchísimo a quemado hasta que finalmente salió bien, y ahí pude expresarte todo lo que sentía. Humano, imperfecto, pero lleno de un amor inmenso.</p>
+            </div>
+        </section>
+
+        <section class="chapter reveal">
+            <div class="photo-container">
+                <img src="./images/quieres ser mi novia.jpg" alt="Quieres ser mi novia">
+            </div>
+            <div class="text-container">
+                <h2>¿Quieres ser mi novia?</h2>
+                <p>Aquí aparece el letrero y las copas de vino. Fue uno de los momentos más románticos y especiales de mi vida. Aquí, oficialmente, comenzó nuestra historia en papel, aunque en mi corazón ya había empezado mucho antes.</p>
+            </div>
+        </section>
+
+        <section class="chapter reveal">
+            <div class="photo-container">
+                <img src="./images/flyer enamorados omg.jpg" alt="Flyer enamorados">
+            </div>
+            <div class="text-container">
+                <h2>Flyer enamorados</h2>
+                <p>Es un resumen de todo lo que siento por ti. Un testimonio gráfico de cómo te amo como nunca antes había amado a nadie en la vida.</p>
+            </div>
+        </section>
+
+        <section class="chapter reveal">
+            <div class="photo-container">
+                <img src="./images/bebe doctora y inge.png" alt="Bebé doctora e inge">
+            </div>
+            <div class="text-container">
+                <h2>Bebé doctora e inge</h2>
+                <p>Nuestros sueños cumplidos, pero juntos. Tú queriendo ser doctora y yo ingeniero. Porque yo no solo soñaba con mi futuro...</p>
+                <p class="quote-cinematic">“Yo soñaba una vida entera contigo.”</p>
+            </div>
+        </section>
+
+        <section class="chapter reveal" style="text-align: center; display: block; margin-top: 50px;">
+            <p style="font-size: 1.2rem; max-width: 800px; margin: 0 auto;">
+                Y la lista de recuerdos sigue: hacernos cosquillas, ir al cine, el parque de trampolines, las llamadas infinitas, los nervios, los abrazos, las más de 20 salidas, las bromas tontas y los momentos pequeños que terminaron significando muchísimo. 
+                <br><br><strong>Me enamoré de la rutina contigo.</strong>
+            </p>
+        </section>
+
+        <section class="wounds reveal">
+            <div class="wounds-container">
+                <h1 class="wounds-highlight">“No quiero que nos recordemos como dos personas que se amaban y se dejaron perder por las heridas.”</h1>
+                <p>Sé que ha habido desgaste. Ciclos pesados, cansancio, peleas e inseguridades. A veces el miedo nos ha ganado y nos ha hecho olvidar cómo sostenernos.</p>
+                <p>Pero no escribo esto para mirar el dolor. Lo escribo porque el dolor me enseñó algo importante.</p>
+                <h1 class="wounds-highlight" style="font-size: 1.6rem;">“No creo que dejamos de amarnos... creo que nos cansamos de no saber cómo cuidarnos.”</h1>
+                <p>Tal vez el problema nunca fue la falta de amor, sino no saber cómo dejar de herirnos cuando algo nos dolía. Todavía hay amor, Julieta. Solo necesitamos aprender a cuidarlo, aprender a amarnos mejor desde la madurez y la empatía.</p>
+            </div>
+        </section>
+
+        <section class="finale">
+            <div class="photo-container final-photo reveal">
+                <img src="./images/los mejores fondos.jpg" alt="Aun después de todo">
+            </div>
+            <h1 class="reveal">Aun después de todo...<br>te sigo eligiendo a ti 🤍</h1>
+            <p class="reveal">Porque si algo aprendí de toda nuestra historia...<br>es que mi lugar favorito siempre terminaba siendo contigo.</p>
+            
+            <a href="https://wa.me/573247977784?text=Si%20amor%20volvamos%20a%20ser%20como%20antes%2Cte%20amo" target="_blank" class="btn-final reveal">
+                ¿Volvemos a enamorarnos bonito?<br>
+                <span style="font-size: 0.8rem; font-weight: bold;">(Espicha aquí 🤍)</span>
+            </a>
+        </section>
+    </div>
+
+    <script>
+        // 1. Secuencia de Intro - Lógica Secuencial Mejorada
+        const t1 = document.getElementById('t1');
+        const t2 = document.getElementById('t2');
+        const t3 = document.getElementById('t3');
+        const btn = document.getElementById('enter-btn');
+        const intro = document.getElementById('intro-screen');
+        const main = document.getElementById('main-content');
+        const audio = document.getElementById('bg-audio');
+
+        // Función para mostrar/ocultar textos uno por uno de forma limpia
+        // Usamos tiempos un poco más rápidos para no hacer esperar tanto.
+
+        // T1 aparece
+        setTimeout(() => { if(t1) t1.style.opacity = 1; }, 500);
+        // T1 desaparece
+        setTimeout(() => { if(t1) t1.style.opacity = 0; }, 3500);
+        
+        // T2 aparece
+        setTimeout(() => { if(t2) t2.style.opacity = 1; }, 4000);
+        // T2 desaparece
+        setTimeout(() => { if(t2) t2.style.opacity = 0; }, 7000);
+        
+        // T3 aparece ("mi lugar favorito")
+        setTimeout(() => { if(t3) t3.style.opacity = 1; }, 7500);
+        // T3 desaparece (LA CLAVE: EL TEXTO SE VA ANTES DE QUE VENGA EL BOTÓN)
+        setTimeout(() => { if(t3) t3.style.opacity = 0; }, 10500);
+
+        // Momento de limpieza (pantalla negra)
+        // El botón aparece solo
+        setTimeout(() => { 
+            if(btn) {
+                // Primero lo hacemos visible para el layout
+                btn.style.display = 'inline-block';
+                // Trigger reflow para que la animación funcione
+                void btn.offsetWidth;
+                // Luego lo animamos
+                btn.style.opacity = 1; 
+                btn.style.pointerEvents = 'auto'; // ¡Esto activa el clic!
+            }
+        }, 11500); // 1 segundo después de que se fue T3
+
+        // 2. Iniciar Experiencia
+        function startExperience() {
+            // Iniciar música de forma segura (sin que rompa el código si falla)
+            try {
+                let playPromise = audio.play();
+                if (playPromise !== undefined) {
+                    playPromise.catch(error => { console.log("Música no arrancó sola"); });
+                }
+            } catch(e) {}
+            
+            // Transición a la historia
+            intro.style.opacity = 0;
+            
+            // Retraso para que desvanezca antes de mostrar el contenido
+            setTimeout(() => {
+                intro.style.display = 'none';
+                main.style.display = 'block';
+                
+                // Forzar al navegador a entender el cambio antes de animar
+                setTimeout(() => {
+                    main.style.opacity = 1;
+                    initScrollAnimations();
+                    createParticles();
+                }, 100);
+            }, 1500);
+        }
+
+        // 3. Control de Música
+        function toggleMusic() {
+            if (audio.paused) {
+                audio.play();
+                document.getElementById('music-control').innerText = '🎵';
+            } else {
+                audio.pause();
+                document.getElementById('music-control').innerText = '🔇';
+            }
+        }
+
+        // 4. Animaciones al Scrollear
+        function initScrollAnimations() {
+            const reveals = document.querySelectorAll('.reveal');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                    }
+                });
+            }, { threshold: 0.15 });
+
+            reveals.forEach(reveal => {
+                observer.observe(reveal);
+            });
+        }
+
+        // 5. Partículas Flotantes
+        function createParticles() {
+            const container = document.getElementById('particles-container');
+            const particleCount = 20;
+
+            for (let i = 0; i < particleCount; i++) {
+                let particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+                let size = Math.random() * 5 + 2; 
+                let left = Math.random() * 100; 
+                let duration = Math.random() * 10 + 10; 
+                let delay = Math.random() * 10;
+
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.left = `${left}vw`;
+                particle.style.animationDuration = `${duration}s`;
+                particle.style.animationDelay = `${delay}s`;
+
+                container.appendChild(particle);
+            }
+        }
+    </script>
+</body>
+</html>
